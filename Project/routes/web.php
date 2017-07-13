@@ -11,9 +11,11 @@
 |
 */
 
-$app->get('', ['as' => 'dashboard', 'uses' => 'ViewController@dashboard']);
+$app->get('', ['as' => 'home', 'uses' => 'ViewController@home']);
 
-$app->get('blade', 'ViewController@blade');
+$app->get('blade', function() {
+    return view('blade', ['name' => 'Chad']);
+});
 $app->get('login', 'ViewController@login');
 
 $app->get('api', function() {
@@ -23,6 +25,11 @@ $app->get('api', function() {
 $app->get('api/login', 'UserController@authenticate');
 
 $app->group(['middleware' => 'auth'], function() use ($app) {
+    // Debug routes
+    $app->get('base', function() {
+        return view('base', ['title' => 'Test Base Template']);
+    });
+    
     // User routes
     $app->get('logout', 'UserController@logout');
     $app->get('api/me', 'UserController@me');

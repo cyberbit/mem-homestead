@@ -73,7 +73,7 @@ class UserController extends Controller
         // Non-API request
         else {
             // Redirect to homepage
-            return redirect()->route('dashboard');
+            return redirect()->route('home');
         }
     }
 }

@@ -30,7 +30,7 @@ class NoteController extends Controller
      * Return single note assigned to the user by ID.
      */
     public function one(Request $request, $id) {
-        $note = Auth::user()->notes->find($id);
+        $note = Auth::user()->notes()->with('user')->find($id);
         
         if ($note) {
             return response()->json(['status' => 'success', 'note' => $note]);

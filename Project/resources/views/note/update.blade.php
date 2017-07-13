@@ -1,21 +1,24 @@
-<!DOCTYPE html>
-<html>
+@extends('base')
 
-<head>
-    <title>New Note</title>
-</head>
+@section('title', 'Edit Note')
 
-<body>
+@section('content')
     <h1>Edit Note</h1>
-    <p><a href="/notes?api_token={{ Auth::user()->api_token }}">Cancel</a></p>
     
     <form action="/api/notes/{{ $note->id }}/update">
         <input type="hidden" name="api_token" value="{{ Auth::user()->api_token }}">
         <input type="hidden" name="redirect" value="1">
-        <p><label for="title">Title: <input type="text" name="title" id="title" value="{{ $note->title }}"></label></p>
-        <p><label for="body">Body: <textarea name="body" id="body">{{ $note->body }}</textarea></label></p>
-        <button type="submit">Submit</button>
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" name="title" id="title" class="form-control" value="{{ $note->title }}" placeholder="Title">
+        </div>
+        <div class="form-group">
+            <label for="body">Body</label>
+            <textarea name="body" id="body" class="form-control" placeholder="Body">{{ $note->body }}</textarea>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <a href="/notes?api_token={{ Auth::user()->api_token }}" class="btn btn-secondary">Cancel</a>
+        </div>
     </form>
-</body>
-
-</html>
+@endsection

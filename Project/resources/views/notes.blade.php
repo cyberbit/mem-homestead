@@ -1,26 +1,27 @@
-<!DOCTYPE html>
-<html>
+@extends('base')
 
-<head>
-    <title>My Notes</title>
-</head>
+@section('title', 'My Notes')
 
-<body>
+@section('content')
     <h1>My Notes</h1>
-    
-    <a href="/notes/new?api_token={{ Auth::user()->api_token }}">New Note</a> <a href="/logout?api_token={{ Auth::user()->api_token }}">Logout</a>
+    <p>
+        <a href="/notes/new?api_token={{ Auth::user()->api_token }}" class="btn btn-primary">New Note</a>
+    </p>
     @if (!$notes)
         No notes!
     @else
-        <ul>
+        <div class="card-columns">
             @foreach (Auth::user()->notes()->with('user')->get() as $note)
-                <li>
-                    <strong><a href="/notes/{{ $note->id }}?api_token={{ Auth::user()->api_token }}">{{ $note->title }}</a></strong> <em>(Created by {{ $note->user->name }} on {{ $note->created_at }})</em> <a href="/notes/{{ $note->id }}/edit?api_token={{ Auth::user()->api_token }}">Edit</a> <a href="/notes/{{ $note->id }}/delete?api_token={{ Auth::user()->api_token }}">Delete</a><br>
-                    {{ $note->body }}
-                </li>
+                <div class="card">
+                    <div class="card-block">
+                        <h4 class="card-title"><a href="/notes/{{ $note->id }}?api_token={{ Auth::user()->api_token }}">{{ $note->title }}</a></h4>
+                        <p class="card-text">{{ $note->body }}</p>
+                        <p class="card-text"><small class="text-muted">Created by {{ $note->user->name }} on {{ $note->created_at }}</small></p>
+                        <a href="/notes/{{ $note->id }}/edit?api_token={{ Auth::user()->api_token }}" class="btn btn-sm btn-primary">Edit</a>
+                        <a href="/notes/{{ $note->id }}/delete?api_token={{ Auth::user()->api_token }}" class="btn btn-sm btn-outline-danger">Delete</a><br>
+                    </div>
+                </div>
             @endforeach
-        </ul>
+        </div>
     @endif
-</body>
-
-</html>
+@endsection

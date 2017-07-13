@@ -20,17 +20,10 @@ class ViewController extends Controller
     }
     
     /**
-     * Test Blade view
+     * Home view
      */
-    public function blade(Request $request) {
-        return view('blade', ['name' => 'Chad']);
-    }
-    
-    /**
-     * Dashboard view
-     */
-    public function dashboard(Request $request) {
-        return view('dashboard');
+    public function home(Request $request) {
+        return view('home');
     }
     
     /**
