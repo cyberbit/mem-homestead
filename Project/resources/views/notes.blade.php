@@ -2,6 +2,16 @@
 
 @section('title', 'My Notes')
 
+@push('styles')
+    <style>
+        @media (max-width: 991px) and (min-width: 576px) {
+            .card-columns {
+                column-count: 2;
+            }
+        }
+    </style>
+@endpush
+
 @section('content')
     <h1>My Notes</h1>
     <p>
@@ -10,7 +20,7 @@
     @if (!$notes)
         No notes!
     @else
-        <div class="card-columns">
+        <div class="notes card-columns">
             @foreach (Auth::user()->notes()->with('user')->get() as $note)
                 <div class="card">
                     <div class="card-block">
