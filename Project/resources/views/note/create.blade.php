@@ -10,7 +10,7 @@
         <input type="hidden" name="redirect" value="1">
         <div class="form-group">
             <label for="title">Title</label>
-            <input type="text" name="title" id="title" class="form-control" placeholder="Title" value="new note">
+            <input type="text" name="title" id="title" class="form-control" placeholder="Title" value="new note {{ App\Note::max('id') + 1 }}">
         </div>
         <div class="form-group">
             <label for="body">Body</label>

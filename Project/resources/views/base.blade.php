@@ -37,7 +37,7 @@
                                     <a class="dropdown-item" href="/logout?api_token={{ Auth::user()->api_token }}">Logout</a>
                                 </div>
                             </li>
-                        @else
+                        @elseif (!(isset($login) and $login))
                             <li class="nav-item">
                                 <a class="nav-link" href="/login">Login</a>
                             </li>
