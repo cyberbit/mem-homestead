@@ -10,11 +10,11 @@
         <input type="hidden" name="redirect" value="1">
         <div class="form-group">
             <label for="title">Title</label>
-            <input type="text" name="title" id="title" class="form-control" placeholder="Title" value="new note {{ App\Note::max('id') + 1 }}">
+            <input type="text" name="title" id="title" class="form-control" placeholder="Title" value="new note {{ App\Note::max('id') + 1 }}" required>
         </div>
         <div class="form-group">
             <label for="body">Body</label>
-            <textarea name="body" id="body" class="form-control" placeholder="Body"></textarea>
+            <textarea name="body" id="body" class="form-control" placeholder="Body" required></textarea>
         </div>
         
         <button type="submit" class="btn btn-primary">Submit</button>

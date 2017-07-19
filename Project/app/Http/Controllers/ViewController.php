@@ -30,6 +30,9 @@ class ViewController extends Controller
      * Login view
      */
     public function login(Request $request) {
-        return view('login', ['login' => true]);
+        return view('login', [
+            'login' => true,
+            'error' => $request->input('error')
+        ]);
     }
 }

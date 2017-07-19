@@ -41,7 +41,7 @@ class UserController extends Controller
         
         $user = User::where('email', $request->input('email'))->first();
         
-        if (Hash::check($request->input('password'), $user->password)) {
+        if ($user and Hash::check($request->input('password'), $user->password)) {
             $api_token = base64_encode(str_random(24));
             
             User::where('email', $request->input('email'))->update(['api_token' => "$api_token"]);
@@ -52,7 +52,11 @@ class UserController extends Controller
                 return response()->json(['status' => 'success', 'api_token' => $api_token]);
             }
         } else {
-            return response()->json(['status' => 'fail'], 401);
+            if ($request->has('redirect')) {
+                return redirect()->route('login', ['error' => 1]);
+            } else {
+                return response()->json(['status' => 'fail'], 401);
+            }
         }
     }
     

@@ -16,7 +16,7 @@ $app->get('', ['as' => 'home', 'uses' => 'ViewController@home']);
 $app->get('blade', function() {
     return view('blade', ['name' => 'Chad']);
 });
-$app->get('login', 'ViewController@login');
+$app->get('login', ['as' => 'login', 'uses' => 'ViewController@login']);
 
 $app->get('api', function() {
     return response()->json(['COW' => 'YES I AM REAL MAN YOU WANT TO GO SKATEBOARDS']);
