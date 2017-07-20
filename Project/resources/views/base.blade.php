@@ -11,9 +11,16 @@
     
         <!-- Bootstrap core CSS -->
         <link href="/css/bootstrap.min.css" rel="stylesheet">
-    
-        <!-- Custom styles for this template -->
-        <link href="/css/starter-template.css" rel="stylesheet">
+        
+        <style>
+            body {
+                padding-top: 5rem;
+            }
+            
+            #factory {
+                display: none;
+            }
+        </style>
         
         @stack('styles')
     </head>
@@ -53,14 +60,57 @@
             </div>-->
         </div><!-- /.container -->
         
+        <div class="modal fade" id="note-view-modal" tabindex="-1" role="dialog" aria-labelledby="note-view-title" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="note-title modal-title" id="note-view-title">note.title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="note-body">note.body</p>
+                        <small class="text-muted">Created by <span class="note-created-by">user.name</span> on <span class="note-created-at">note.created_at</span>, updated <span class="note-updated-at">note.updated_at</span></small>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="factory">
+            <div class="note-card card">
+                <div class="card-block">
+                    <h4 class="card-title"><a href="#" class="note-title">note.title</a></h4>
+                    <p class="note-body card-text">note.body</p>
+                    <p class="card-text"><small class="text-muted">Created by <span class="note-created-by">user.name</span> on <span class="note-created-at">note.created_at</span></small></p>
+                    <a href="#" class="note-btn-edit btn btn-sm btn-primary">Edit</a>
+                    <a href="#" class="note-btn-delete btn btn-sm btn-outline-danger">Delete</a><br>
+                </div>
+            </div>
+        </div>
+        
         <!-- Bootstrap core JavaScript
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
-        <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
         <!--<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>-->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
         <script src="/js/bootstrap.min.js"></script>
         <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
         <!--<script src="/js/ie10-viewport-bug-workaround.js"></script>-->
+        
+        <script src="/js/moment.min.js"></script>
+        
+        <script>
+            var app = {
+                user: {!! Auth::check() ? Auth::user()->makeVisible(['api_token'])->toJson() : "null" !!}
+            };
+        </script>
+        <script src="/js/app.js"></script>
+        
+        @stack('scripts')
     </body>
 </html>

@@ -5,7 +5,7 @@ cpus: 1
 provider: virtualbox
 
 folders:
-    - map: c:/Users/djmar/Documents/GitHub/mem-homestead
+    - map: .
       to: /home/vagrant/Code
 
 sites:
