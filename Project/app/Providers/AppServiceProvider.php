@@ -14,6 +14,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        /*DB::listen(function($query) {
+            echo "<pre>";
+            print_r($query->sql);
+            echo "</pre>";
+        });*/
+        
         // Set timezone
         DB::statement("SET time_zone = 'America/Chicago'");
     }

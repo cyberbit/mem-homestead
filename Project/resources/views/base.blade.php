@@ -20,6 +20,16 @@
             #factory {
                 display: none;
             }
+            
+            .empty {
+                opacity: 0.5 !important;
+                pointer-events: none;
+                user-select: none;
+            }
+            
+            .empty * {
+                color: rgba(0, 0, 0, 0) !important;
+            }
         </style>
         
         @stack('styles')
@@ -80,6 +90,35 @@
             </div>
         </div>
         
+        <div class="modal fade" id="note-edit-modal" tabindex="-1" role="dialog" aria-labelledby="note-edit-title" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="note-title modal-title" id="note-edit-title">Edit Note</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="/api/notes/note.id/update">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="note-edit-title">Title</label>
+                                <input type="text" name="title" id="note-edit-title" class="form-control" value="" placeholder="Title" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="note-edit-body">Body</label>
+                                <textarea name="body" id="note-edit-body" class="form-control" rows="6" placeholder="Body" required></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
         <div id="factory">
             <div class="note-card card">
                 <div class="card-block">
@@ -103,6 +142,7 @@
         <!--<script src="/js/ie10-viewport-bug-workaround.js"></script>-->
         
         <script src="/js/moment.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/jquery.loadingoverlay/latest/loadingoverlay.min.js"></script>
         
         <script>
             var app = {
