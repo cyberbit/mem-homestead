@@ -21,7 +21,7 @@ class AppServiceProvider extends ServiceProvider
         });*/
         
         // Set timezone
-        DB::statement("SET time_zone = 'America/Chicago'");
+        //DB::statement("SET time_zone = 'America/Chicago'");
     }
     
     /**

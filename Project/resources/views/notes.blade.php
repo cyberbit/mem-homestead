@@ -34,6 +34,9 @@
                     // Hide overlay
                     $notes.empty().LoadingOverlay("hide");
                     
+                    // Add notes to app object
+                    app.notes = d.notes;
+                    
                     // Iterate notes
                     $.each(d.notes, function(i, v) {
                         var $note = _factory("note-card");
@@ -66,14 +69,15 @@
             
             function initModals() {
                 var $noteEdit = $("#note-edit-modal");
+                var $noteNew = $("#note-new-modal");
                 
                 $noteEdit.find("form").submit(function(e) {
                     e.preventDefault();
                     
-                    console.log("update note: %o", note);
-                    
                     var note = $noteEdit.data("note");
                     var formData = [{name: "api_token", value: app.user.api_token}];
+                    
+                    console.log("update note: %o", note);
                     
                     var $submit = $(this).find("[type=submit]");
                     $submit.attr("disabled", true);
@@ -101,6 +105,52 @@
                         }
                     });
                 });
+                
+                // Capture "New Note" button
+                $noteNew.on("show.bs.modal", function(e) {
+                    console.log("new note");
+                    
+                    // Determine next note ID
+                    var newID = Math.max.apply(Math, app.notes.map(function(o) { return o.id; })) + 1;
+                    
+                    // Set up modal
+                    var $modal = $(this);
+                    $modal.find("[name=title]").val("new note " + newID);
+                });
+                
+                $noteNew.find("form").submit(function(e) {
+                    e.preventDefault();
+                    
+                    var formData = [{name: "api_token", value: app.user.api_token}];
+                    
+                    console.log("create note");
+                    
+                    var $submit = $(this).find("[type=submit]");
+                    $submit.attr("disabled", true);
+                    
+                    // Submit form
+                    $.get("/api/notes/create", $.merge(formData, $(this).serializeArray()), function(d) {
+                        console.log("create result: %o", d);
+                        
+                        $submit.attr("disabled", false);
+                        
+                        if (d.status == "success") {
+                            // Close modal and refresh notes
+                            $noteNew.modal('hide');
+                            initNotes();
+                        }
+                        
+                        else {
+                            $submit.removeCLass("btn-primary").addClass("btn-danger");
+                            $submit.text("Error!");
+                            
+                            setTimeout(function() {
+                                $submit.removeCLass("btn-danger").addClass("btn-primary");
+                                $submit.text("Submit");
+                            }, 1700);
+                        }
+                    });
+                });
             }
             
             function viewNote(note) {
@@ -112,7 +162,7 @@
                 $modal.find(".note-body").text(note.body);
                 $modal.find(".note-created-by").text(note.user.name);
                 $modal.find(".note-created-at").text(note.created_at);
-                $modal.find(".note-updated-at").text(moment(note.updated_at).fromNow());
+                $modal.find(".note-updated-at").text(note.updated_at);
                 
                 // Display modal
                 $modal.modal();
@@ -123,7 +173,6 @@
                 
                 // Set up modal
                 var $modal = $("#note-edit-modal").data("note", note);
-                $modal.find("[name=api_token]").val(app.user.api_token);
                 $modal.find("[name=title]").val(note.title);
                 $modal.find("[name=body]").val(note.body);
                 
@@ -141,7 +190,7 @@
 @section('content')
     <h1>My Notes</h1>
     <p>
-        <a href="/notes/new?api_token={{ Auth::user()->api_token }}" class="btn btn-primary">New Note</a>
+        <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#note-new-modal">New Note</a>
     </p>
     @if (!$notes)
         No notes!

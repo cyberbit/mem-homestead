@@ -81,7 +81,7 @@
                     </div>
                     <div class="modal-body">
                         <p class="note-body">note.body</p>
-                        <small class="text-muted">Created by <span class="note-created-by">user.name</span> on <span class="note-created-at">note.created_at</span>, updated <span class="note-updated-at">note.updated_at</span></small>
+                        <small class="text-muted">Created by <span class="note-created-by">user.name</span> on <span class="note-created-at">note.created_at</span>, updated on <span class="note-updated-at">note.updated_at</span></small>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -103,7 +103,36 @@
                         <div class="modal-body">
                             <div class="form-group">
                                 <label for="note-edit-title">Title</label>
-                                <input type="text" name="title" id="note-edit-title" class="form-control" value="" placeholder="Title" required>
+                                <input type="text" name="title" class="form-control" value="" placeholder="Title" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="note-edit-body">Body</label>
+                                <textarea name="body" id="note-edit-body" class="form-control" rows="6" placeholder="Body" required></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal fade" id="note-new-modal" tabindex="-1" role="dialog" aria-labelledby="note-new-title" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="note-title modal-title" id="note-new-title">New Note</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="/api/notes/new">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="note-edit-title">Title</label>
+                                <input type="text" name="title" class="form-control" value="" placeholder="Title" required>
                             </div>
                             <div class="form-group">
                                 <label for="note-edit-body">Body</label>
