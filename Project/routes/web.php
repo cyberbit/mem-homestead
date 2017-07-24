@@ -30,6 +30,9 @@ $app->group(['middleware' => 'auth'], function() use ($app) {
         return view('base', ['title' => 'Test Base Template']);
     });
     
+    // Demo page
+    $app->get('demo', 'NoteController@demo');
+    
     // User routes
     $app->get('logout', 'UserController@logout');
     $app->get('api/me', 'UserController@me');

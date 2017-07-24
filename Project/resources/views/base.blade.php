@@ -30,6 +30,10 @@
             .empty * {
                 color: rgba(0, 0, 0, 0) !important;
             }
+            
+            .content-loadable {
+                min-height: 200px;
+            }
         </style>
         
         @stack('styles')
@@ -72,21 +76,7 @@
         
         <div class="modal fade" id="note-view-modal" tabindex="-1" role="dialog" aria-labelledby="note-view-title" aria-hidden="true">
             <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="note-title modal-title" id="note-view-title">note.title</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p class="note-body">note.body</p>
-                        <small class="text-muted">Created by <span class="note-created-by">user.name</span> on <span class="note-created-at">note.created_at</span>, updated on <span class="note-updated-at">note.updated_at</span></small>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
+                <div class="modal-content content-loadable"></div>
             </div>
         </div>
         
@@ -99,22 +89,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="/api/notes/note.id/update">
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label for="note-edit-title">Title</label>
-                                <input type="text" name="title" class="form-control" value="" placeholder="Title" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="note-edit-body">Body</label>
-                                <textarea name="body" id="note-edit-body" class="form-control" rows="6" placeholder="Body" required></textarea>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        </div>
-                    </form>
+                    <div class="content-loadable"></div>
                 </div>
             </div>
         </div>
@@ -152,19 +127,12 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="note-new-title">Confirm Delete</h5>
+                        <h5 class="modal-title" id="note-delete-title">Confirm Delete</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body">
-                        <p>Confirm delete of note <span class="note-id">note.id</span> - <span class="note-title">note.title</span>?</p>
-                        <div class="alert alert-danger">Changes cannot be undone.</div>
-                    </div>
-                    <div class="modal-footer">
-                        <a href="#" class="note-btn-delete btn btn-danger">Delete</a>
-                        <a href="#" class="btn btn-secondary" data-dismiss="modal">Cancel</a>
-                    </div>
+                    <div class="content-loadable"></div>
                 </div>
             </div>
         </div>
@@ -178,6 +146,9 @@
                     <a href="#" class="note-btn-edit btn btn-sm btn-primary">Edit</a>
                     <a href="#" class="note-btn-delete btn btn-sm btn-outline-danger">Delete</a><br>
                 </div>
+            </div>
+            <div class="modal-loading modal-body">
+                <p>Loading...</p>
             </div>
         </div>
         
@@ -197,6 +168,12 @@
         <script>
             var app = {
                 user: {!! Auth::check() ? Auth::user()->makeVisible(['api_token'])->toJson() : "null" !!}
+            };
+            
+            var modal_LoadingOverlay = {
+                //color: "transparent",
+                resizeInterval: 20,
+                fade: false
             };
         </script>
         <script src="/js/app.js"></script>

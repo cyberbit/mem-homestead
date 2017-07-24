@@ -1,4 +1,4 @@
-@extends('base')
+{{-- @extends('base')
 
 @section('title', 'Edit Note')
 
@@ -21,4 +21,58 @@
             <a href="/notes?api_token={{ Auth::user()->api_token }}" class="btn btn-secondary">Cancel</a>
         </div>
     </form>
-@endsection
+@endsection --}}
+
+<form action="/api/notes/{{ $note->id }}/update">
+    <div class="modal-body">
+        <div class="form-group">
+            <label for="note-edit-title">Title</label>
+            <input type="text" name="title" class="form-control" value="{{ $note->title }}" placeholder="Title" required>
+        </div>
+        <div class="form-group">
+            <label for="note-edit-body">Body</label>
+            <textarea name="body" id="note-edit-body" class="form-control" rows="6" placeholder="Body" required>{{ $note->body }}</textarea>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+    </div>
+</form>
+
+<script>
+    $(function() {
+        var $modal = $("#note-edit-modal");
+        var note = {!! json_encode($note) !!};
+        
+        $modal.find("form").submit(function(e) {
+            e.preventDefault();
+            
+            var formData = [{name: "api_token", value: app.user.api_token}];
+            
+            var $submit = $(this).find("[type=submit]");
+            $submit.attr("disabled", true);
+            
+            // Submit form
+            $.get("/api/notes/" + note.id + "/update", $.merge(formData, $(this).serializeArray()), function(d) {
+                $submit.attr("disabled", false);
+                
+                if (d.status == "success") {
+                    // Close modal and refresh notes
+                    $modal.modal('hide');
+                    initNotes();
+                }
+                
+                else {
+                    $submit.removeClass("btn-primary").addClass("btn-danger");
+                    $submit.text("Error!");
+                    
+                    setTimeout(function() {
+                        $submit.removeClass("btn-danger").addClass("btn-primary");
+                        $submit.text("Submit");
+                    }, 1700);
+                }
+            });
+        });
+    });
+</script>

@@ -15,97 +15,11 @@
 @push('scripts')
     <script>
         $(function() {
-            var defaultApiData = {
-                api_token: app.user.api_token
-            };
-            
             initNotes(false);
             initModals();
             
-            function initNotes(overlay) {
-                if (typeof overlay == "undefined") overlay = true;
-                
-                var $notes = $("#notes-container");
-                if (overlay) $notes.LoadingOverlay("show", {zIndex: 1000});
-                
-                $.get("/api/notes", {api_token: app.user.api_token}, function(d) {
-                    //console.log("notes result: %o", d);
-                    
-                    // Hide overlay
-                    $notes.empty().LoadingOverlay("hide");
-                    
-                    // Add notes to app object
-                    app.notes = d.notes;
-                    
-                    // Iterate notes
-                    $.each(d.notes, function(i, v) {
-                        var $note = _factory("note-card");
-                        
-                        // Set up note
-                        $note.find(".note-title").text(v.title).click(function(e) {
-                            e.preventDefault();
-                            
-                            viewNote(v);
-                        });
-                        $note.find(".note-body").text(v.body);
-                        $note.find(".note-created-by").text(v.user.name);
-                        $note.find(".note-created-at").text(v.created_at);
-                        $note.find(".note-btn-edit").click(function(e) {
-                            e.preventDefault();
-                            
-                            editNote(v);
-                        });
-                        $note.find(".note-btn-delete").click(function(e) {
-                            e.preventDefault();
-                            
-                            deleteNote(v);
-                        });
-                        
-                        // Append note to container
-                        $notes.append($note);
-                    });
-                });
-            }
-            
             function initModals() {
-                var $noteEdit = $("#note-edit-modal");
                 var $noteNew = $("#note-new-modal");
-                var $noteDelete = $("#note-delete-modal");
-                
-                $noteEdit.find("form").submit(function(e) {
-                    e.preventDefault();
-                    
-                    var note = $noteEdit.data("note");
-                    var formData = [{name: "api_token", value: app.user.api_token}];
-                    
-                    //console.log("update note: %o", note);
-                    
-                    var $submit = $(this).find("[type=submit]");
-                    $submit.attr("disabled", true);
-                    
-                    // Submit form
-                    $.get("/api/notes/" + note.id + "/update", $.merge(formData, $(this).serializeArray()), function(d) {
-                        //console.log("update result: %o", d);
-                        
-                        $submit.attr("disabled", false);
-                        
-                        if (d.status == "success") {
-                            // Close modal and refresh notes
-                            $noteEdit.modal('hide');
-                            initNotes();
-                        }
-                        
-                        else {
-                            $submit.removeClass("btn-primary").addClass("btn-danger");
-                            $submit.text("Error!");
-                            
-                            setTimeout(function() {
-                                $submit.removeClass("btn-danger").addClass("btn-primary");
-                                $submit.text("Submit");
-                            }, 1700);
-                        }
-                    });
-                });
                 
                 // Capture "New Note" button
                 $noteNew.on("show.bs.modal", function(e) {
@@ -117,6 +31,7 @@
                     // Set up modal
                     var $modal = $(this);
                     $modal.find("[name=title]").val("new note " + newID);
+                    $modal.find("[name=body]").val("");
                 });
                 
                 $noteNew.find("form").submit(function(e) {
@@ -152,80 +67,101 @@
                         }
                     });
                 });
-                
-                $noteDelete.find(".note-btn-delete").click(function(e) {
-                    e.preventDefault();
-                    
-                    var note = $noteDelete.data("note");
-                    var formData = [{name: "api_token", value: app.user.api_token}];
-                    
-                    //console.log("delete note: %o", note);
-                    
-                    var $delete = $(this);
-                    $delete.addClass("disabled");
-                    
-                    // Submit request
-                    $.get("/api/notes/" + note.id + "/delete", formData, function(d) {
-                        //console.log("delete result: %o", d);
-                        
-                        $delete.removeClass("disabled");
-                        
-                        if (d.status == "success") {
-                            // Close modal and refresh notes
-                            $noteDelete.modal('hide');
-                            initNotes();
-                        }
-                        
-                        else {
-                            $delete.text("Error!");
-                            
-                            setTimeout(function() {
-                                $delete.text("Delete");
-                            }, 1700);
-                        }
-                    });
-                });
-            }
-            
-            function viewNote(note) {
-                //console.log("view note: %o", note);
-                
-                // Set up modal
-                var $modal = $("#note-view-modal");
-                $modal.find(".note-title").text(note.title);
-                $modal.find(".note-body").text(note.body);
-                $modal.find(".note-created-by").text(note.user.name);
-                $modal.find(".note-created-at").text(note.created_at);
-                $modal.find(".note-updated-at").text(note.updated_at);
-                
-                // Display modal
-                $modal.modal();
-            }
-            
-            function editNote(note) {
-                //console.log("edit note: %o", note);
-                
-                // Set up modal
-                var $modal = $("#note-edit-modal").data("note", note);
-                $modal.find("[name=title]").val(note.title);
-                $modal.find("[name=body]").val(note.body);
-                
-                // Display modal
-                $modal.modal();
-            }
-            
-            function deleteNote(note) {
-                //console.log("delete note: %o", note);
-                
-                // Set up modal
-                var $modal = $("#note-delete-modal").data("note", note);
-                $modal.find(".note-id").text(note.id);
-                $modal.find(".note-title").text(note.title);
-                
-                // Display modal
-                $modal.modal();
             }
         });
+        
+        function initNotes(overlay) {
+            if (typeof overlay == "undefined") overlay = true;
+            
+            var $notes = $("#notes-container");
+            if (overlay) $notes.LoadingOverlay("show", {zIndex: 1000});
+            
+            $.get("/api/notes", {api_token: app.user.api_token}, function(d) {
+                //console.log("notes result: %o", d);
+                
+                // Hide overlay
+                $notes.empty().LoadingOverlay("hide");
+                
+                // Add notes to app object
+                app.notes = d.notes;
+                
+                // Iterate notes
+                $.each(d.notes, function(i, v) {
+                    var $note = _factory("note-card");
+                    
+                    // Set up note
+                    $note.find(".note-title").text(v.title).click(function(e) {
+                        e.preventDefault();
+                        
+                        viewNote(v);
+                    });
+                    $note.find(".note-body").text(v.body);
+                    $note.find(".note-created-by").text(v.user.name);
+                    $note.find(".note-created-at").text(v.created_at);
+                    $note.find(".note-btn-edit").click(function(e) {
+                        e.preventDefault();
+                        
+                        editNote(v);
+                    });
+                    $note.find(".note-btn-delete").click(function(e) {
+                        e.preventDefault();
+                        
+                        deleteNote(v);
+                    });
+                    
+                    // Append note to container
+                    $notes.append($note);
+                });
+            });
+        }
+        
+        function viewNote(note) {
+            //console.log("view note: %o", note);
+            
+            // Set up modal
+            var $modal = $("#note-view-modal");
+            var $content = $modal.find(".content-loadable");
+            
+            $content.LoadingOverlay("show", modal_LoadingOverlay);
+            $content.load("/notes/" + note.id + "?" + $.param({api_token: app.user.api_token}), function() {
+                $content.LoadingOverlay("hide");
+            });
+            
+            // Display modal
+            $modal.modal();
+        }
+        
+        function editNote(note) {
+            //console.log("edit note: %o", note);
+            
+            // Set up modal
+            var $modal = $("#note-edit-modal");
+            var $content = $modal.find(".content-loadable");
+            
+            $content.LoadingOverlay("show", modal_LoadingOverlay);
+            $content.load("/notes/" + note.id + "/edit?" + $.param({api_token: app.user.api_token}), function() {
+                $content.LoadingOverlay("hide");
+            });
+            
+            // Display modal
+            $modal.modal();
+        }
+        
+        function deleteNote(note) {
+            //console.log("delete note: %o", note);
+            
+            // Set up modal
+            var $modal = $("#note-delete-modal");
+            var $content = $modal.find(".content-loadable");
+            
+            $content.LoadingOverlay("show", modal_LoadingOverlay);
+            $content.load("/notes/" + note.id + "/delete?" + $.param({api_token: app.user.api_token}), function() {
+                $content.LoadingOverlay("hide");
+            });
+            
+            // Display modal
+            $modal.modal();
+        }
     </script>
 @endpush
 

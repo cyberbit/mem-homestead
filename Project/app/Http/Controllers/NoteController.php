@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Note;
+use App\User;
 use Auth;
 
 class NoteController extends Controller
@@ -47,6 +48,13 @@ class NoteController extends Controller
     }
     
     /**
+     * Display demo page of notes.
+     */
+    public function demo(Request $request) {
+        return response()->json(['user' => Auth::user(), 'notes' => factory(Note::class, 3)->make()]);
+    }
+    
+    /**
      * Display single note.
      */
     public function view(Request $request, $id) {
@@ -55,7 +63,11 @@ class NoteController extends Controller
         if ($note) {
             return view('note.view', ['note' => $note]);
         } else {
-            return response("Cannot access this note.");
+            return view("modal.alert", [
+                'context' => "danger",
+                'title' => "Error",
+                'msg' => "Cannot access this note."
+            ]);
         }
     }
     
@@ -75,7 +87,11 @@ class NoteController extends Controller
         if ($note) {
             return view('note.update', ['note' => $note]);
         } else {
-            return response("Cannot access this note.");
+            return view("modal.alert", [
+                'context' => "danger",
+                'title' => "Error",
+                'msg' => "Cannot access this note."
+            ]);
         }
     }
     
@@ -88,7 +104,11 @@ class NoteController extends Controller
         if ($note) {
             return view('note.delete', ['note' => $note]);
         } else {
-            return response("Cannot access this note.");
+            return view("modal.alert", [
+                'context' => "danger",
+                'title' => "Error",
+                'msg' => "Cannot access this note."
+            ]);
         }
     }
     
