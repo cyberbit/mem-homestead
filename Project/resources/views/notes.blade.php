@@ -29,7 +29,7 @@
                 if (overlay) $notes.LoadingOverlay("show", {zIndex: 1000});
                 
                 $.get("/api/notes", {api_token: app.user.api_token}, function(d) {
-                    console.log("notes result: %o", d);
+                    //console.log("notes result: %o", d);
                     
                     // Hide overlay
                     $notes.empty().LoadingOverlay("hide");
@@ -70,6 +70,7 @@
             function initModals() {
                 var $noteEdit = $("#note-edit-modal");
                 var $noteNew = $("#note-new-modal");
+                var $noteDelete = $("#note-delete-modal");
                 
                 $noteEdit.find("form").submit(function(e) {
                     e.preventDefault();
@@ -77,14 +78,14 @@
                     var note = $noteEdit.data("note");
                     var formData = [{name: "api_token", value: app.user.api_token}];
                     
-                    console.log("update note: %o", note);
+                    //console.log("update note: %o", note);
                     
                     var $submit = $(this).find("[type=submit]");
                     $submit.attr("disabled", true);
                     
                     // Submit form
                     $.get("/api/notes/" + note.id + "/update", $.merge(formData, $(this).serializeArray()), function(d) {
-                        console.log("update result: %o", d);
+                        //console.log("update result: %o", d);
                         
                         $submit.attr("disabled", false);
                         
@@ -108,7 +109,7 @@
                 
                 // Capture "New Note" button
                 $noteNew.on("show.bs.modal", function(e) {
-                    console.log("new note");
+                    //console.log("new note");
                     
                     // Determine next note ID
                     var newID = Math.max.apply(Math, app.notes.map(function(o) { return o.id; })) + 1;
@@ -123,14 +124,14 @@
                     
                     var formData = [{name: "api_token", value: app.user.api_token}];
                     
-                    console.log("create note");
+                    //console.log("create note");
                     
                     var $submit = $(this).find("[type=submit]");
                     $submit.attr("disabled", true);
                     
                     // Submit form
                     $.get("/api/notes/create", $.merge(formData, $(this).serializeArray()), function(d) {
-                        console.log("create result: %o", d);
+                        //console.log("create result: %o", d);
                         
                         $submit.attr("disabled", false);
                         
@@ -151,10 +152,43 @@
                         }
                     });
                 });
+                
+                $noteDelete.find(".note-btn-delete").click(function(e) {
+                    e.preventDefault();
+                    
+                    var note = $noteDelete.data("note");
+                    var formData = [{name: "api_token", value: app.user.api_token}];
+                    
+                    //console.log("delete note: %o", note);
+                    
+                    var $delete = $(this);
+                    $delete.addClass("disabled");
+                    
+                    // Submit request
+                    $.get("/api/notes/" + note.id + "/delete", formData, function(d) {
+                        //console.log("delete result: %o", d);
+                        
+                        $delete.removeClass("disabled");
+                        
+                        if (d.status == "success") {
+                            // Close modal and refresh notes
+                            $noteDelete.modal('hide');
+                            initNotes();
+                        }
+                        
+                        else {
+                            $delete.text("Error!");
+                            
+                            setTimeout(function() {
+                                $delete.text("Delete");
+                            }, 1700);
+                        }
+                    });
+                });
             }
             
             function viewNote(note) {
-                console.log("view note: %o", note);
+                //console.log("view note: %o", note);
                 
                 // Set up modal
                 var $modal = $("#note-view-modal");
@@ -169,7 +203,7 @@
             }
             
             function editNote(note) {
-                console.log("edit note: %o", note);
+                //console.log("edit note: %o", note);
                 
                 // Set up modal
                 var $modal = $("#note-edit-modal").data("note", note);
@@ -181,7 +215,15 @@
             }
             
             function deleteNote(note) {
-                console.log("delete note: %o", note);
+                //console.log("delete note: %o", note);
+                
+                // Set up modal
+                var $modal = $("#note-delete-modal").data("note", note);
+                $modal.find(".note-id").text(note.id);
+                $modal.find(".note-title").text(note.title);
+                
+                // Display modal
+                $modal.modal();
             }
         });
     </script>

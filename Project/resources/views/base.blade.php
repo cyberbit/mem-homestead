@@ -94,7 +94,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="note-title modal-title" id="note-edit-title">Edit Note</h5>
+                        <h5 class="modal-title" id="note-edit-title">Edit Note</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -123,7 +123,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="note-title modal-title" id="note-new-title">New Note</h5>
+                        <h5 class="modal-title" id="note-new-title">New Note</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -144,6 +144,27 @@
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal fade" id="note-delete-modal" tabindex="-1" role="dialog" aria-labelledby="note-delete-title" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="note-new-title">Confirm Delete</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Confirm delete of note <span class="note-id">note.id</span> - <span class="note-title">note.title</span>?</p>
+                        <div class="alert alert-danger">Changes cannot be undone.</div>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" class="note-btn-delete btn btn-danger">Delete</a>
+                        <a href="#" class="btn btn-secondary" data-dismiss="modal">Cancel</a>
+                    </div>
                 </div>
             </div>
         </div>
