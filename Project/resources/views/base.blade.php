@@ -103,22 +103,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="/api/notes/new">
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label for="note-edit-title">Title</label>
-                                <input type="text" name="title" class="form-control" value="" placeholder="Title" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="note-edit-body">Body</label>
-                                <textarea name="body" id="note-edit-body" class="form-control" rows="6" placeholder="Body" required></textarea>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        </div>
-                    </form>
+                    <div class="content-loadable"></div>
                 </div>
             </div>
         </div>
@@ -167,14 +152,25 @@
         
         <script>
             var app = {
-                user: {!! Auth::check() ? Auth::user()->makeVisible(['api_token'])->toJson() : "null" !!}
+                user: {!! Auth::check() ? Auth::user()->makeVisible(['api_token'])->toJson() : "null" !!},
+                forms: {}
             };
             
             var modal_LoadingOverlay = {
-                //color: "transparent",
                 resizeInterval: 20,
                 fade: false
             };
+            
+            if (app.user) {
+                app.forms = {
+                    api_token: {api_token: app.user.api_token},
+                    api_token_serialized: [{name: "api_token", value: app.user.api_token}]
+                };
+            }
+            
+            function _modalFade(enableFade) {
+                $(".modal, .modal-backdrop").toggleClass("fade", enableFade);
+            }
         </script>
         <script src="/js/app.js"></script>
         

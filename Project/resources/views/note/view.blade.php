@@ -23,5 +23,28 @@
     <small class="text-muted">Created by {{ $note->user->name }} on {{ $note->created_at }}, updated on {{ $note->updated_at }}</small>
 </div>
 <div class="modal-footer">
+    <button type="button" class="note-btn-edit btn btn-primary">Edit</button>
+    <button type="button" class="note-btn-delete btn btn-outline-danger">Delete</button>
     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 </div>
+
+<script>
+    $(function() {
+        var $modal = $("#note-view-modal");
+        var note = {!! json_encode($note) !!};
+        
+        $modal.find(".note-btn-delete").click(function(e) {
+            e.preventDefault();
+            
+            _modalFade(false);
+            $modal.one("hidden.bs.modal", () => { deleteNote(note); _modalFade(true); }).modal("hide");
+        });
+        
+        $modal.find(".note-btn-edit").click(function(e) {
+            e.preventDefault();
+            
+            _modalFade(false);
+            $modal.one("hidden.bs.modal", () => { editNote(note); _modalFade(true); }).modal("hide");
+        });
+    });
+</script>

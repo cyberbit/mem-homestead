@@ -17,58 +17,20 @@
         $(function() {
             initNotes(false);
             initModals();
-            
-            function initModals() {
-                var $noteNew = $("#note-new-modal");
-                
-                // Capture "New Note" button
-                $noteNew.on("show.bs.modal", function(e) {
-                    //console.log("new note");
-                    
-                    // Determine next note ID
-                    var newID = Math.max.apply(Math, app.notes.map(function(o) { return o.id; })) + 1;
-                    
-                    // Set up modal
-                    var $modal = $(this);
-                    $modal.find("[name=title]").val("new note " + newID);
-                    $modal.find("[name=body]").val("");
-                });
-                
-                $noteNew.find("form").submit(function(e) {
-                    e.preventDefault();
-                    
-                    var formData = [{name: "api_token", value: app.user.api_token}];
-                    
-                    //console.log("create note");
-                    
-                    var $submit = $(this).find("[type=submit]");
-                    $submit.attr("disabled", true);
-                    
-                    // Submit form
-                    $.get("/api/notes/create", $.merge(formData, $(this).serializeArray()), function(d) {
-                        //console.log("create result: %o", d);
-                        
-                        $submit.attr("disabled", false);
-                        
-                        if (d.status == "success") {
-                            // Close modal and refresh notes
-                            $noteNew.modal('hide');
-                            initNotes();
-                        }
-                        
-                        else {
-                            $submit.removeCLass("btn-primary").addClass("btn-danger");
-                            $submit.text("Error!");
-                            
-                            setTimeout(function() {
-                                $submit.removeCLass("btn-danger").addClass("btn-primary");
-                                $submit.text("Submit");
-                            }, 1700);
-                        }
-                    });
-                });
-            }
         });
+        
+        function initModals() {
+            var $noteNew = $("#note-new-modal");
+            
+            $noteNew.on("show.bs.modal", function(e) {
+                var $content = $noteNew.find(".content-loadable");
+                
+                $content.LoadingOverlay("show", modal_LoadingOverlay);
+                $content.load("/notes/new?" + $.param(app.forms.api_token), function() {
+                    $content.LoadingOverlay("hide");
+                });
+            });
+        }
         
         function initNotes(overlay) {
             if (typeof overlay == "undefined") overlay = true;
@@ -76,7 +38,7 @@
             var $notes = $("#notes-container");
             if (overlay) $notes.LoadingOverlay("show", {zIndex: 1000});
             
-            $.get("/api/notes", {api_token: app.user.api_token}, function(d) {
+            $.get("/api/notes", app.forms.api_token, function(d) {
                 //console.log("notes result: %o", d);
                 
                 // Hide overlay
@@ -123,7 +85,7 @@
             var $content = $modal.find(".content-loadable");
             
             $content.LoadingOverlay("show", modal_LoadingOverlay);
-            $content.load("/notes/" + note.id + "?" + $.param({api_token: app.user.api_token}), function() {
+            $content.load("/notes/" + note.id + "?" + $.param(app.forms.api_token), function() {
                 $content.LoadingOverlay("hide");
             });
             
@@ -139,7 +101,7 @@
             var $content = $modal.find(".content-loadable");
             
             $content.LoadingOverlay("show", modal_LoadingOverlay);
-            $content.load("/notes/" + note.id + "/edit?" + $.param({api_token: app.user.api_token}), function() {
+            $content.load("/notes/" + note.id + "/edit?" + $.param(app.forms.api_token), function() {
                 $content.LoadingOverlay("hide");
             });
             
@@ -155,7 +117,7 @@
             var $content = $modal.find(".content-loadable");
             
             $content.LoadingOverlay("show", modal_LoadingOverlay);
-            $content.load("/notes/" + note.id + "/delete?" + $.param({api_token: app.user.api_token}), function() {
+            $content.load("/notes/" + note.id + "/delete?" + $.param(app.forms.api_token), function() {
                 $content.LoadingOverlay("hide");
             });
             

@@ -34,13 +34,11 @@
         $modal.find(".note-btn-delete").click(function(e) {
             e.preventDefault();
             
-            var formData = [{name: "api_token", value: app.user.api_token}];
-            
             var $delete = $(this);
             $delete.addClass("disabled");
             
             // Submit request
-            $.get("/api/notes/" + note.id + "/delete", formData, function(d) {
+            $.get("/api/notes/" + note.id + "/delete", app.forms.api_token_serialized, function(d) {
                 $delete.removeClass("disabled");
                 
                 if (d.status == "success") {

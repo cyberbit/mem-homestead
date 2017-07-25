@@ -48,13 +48,11 @@
         $modal.find("form").submit(function(e) {
             e.preventDefault();
             
-            var formData = [{name: "api_token", value: app.user.api_token}];
-            
             var $submit = $(this).find("[type=submit]");
             $submit.attr("disabled", true);
             
             // Submit form
-            $.get("/api/notes/" + note.id + "/update", $.merge(formData, $(this).serializeArray()), function(d) {
+            $.get("/api/notes/" + note.id + "/update", $.merge(app.forms.api_token_serialized, $(this).serializeArray()), function(d) {
                 $submit.attr("disabled", false);
                 
                 if (d.status == "success") {
