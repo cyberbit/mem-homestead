@@ -35,4 +35,19 @@
     </div>
 @endsection
 
+{{-- @push('scripts')
+    <script>
+        $(function() {
+            //debugger;
+            
+            var error = {{ $error ? 1 : 0 }};
+            
+            // If state is saved, redirect to notes page
+            if (localStorage.api_token && !error) {
+                location = "/notes?api_token=" + localStorage.api_token;
+            }
+        });
+    </script>
+@endpush --}}
+
 </html>

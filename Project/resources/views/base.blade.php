@@ -55,7 +55,7 @@
                                     Welcome, {{ Auth::user()->name }}
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarUser">
-                                    <a class="dropdown-item" href="/logout?api_token={{ Auth::user()->api_token }}">Logout</a>
+                                    <a class="logout dropdown-item" href="/logout?api_token={{ Auth::user()->api_token }}">Logout</a>
                                 </div>
                             </li>
                         @elseif (!(isset($login) and $login))
@@ -151,6 +151,7 @@
         <script src="https://cdn.jsdelivr.net/jquery.loadingoverlay/latest/loadingoverlay.min.js"></script>
         
         <script>
+            // Set up global app variables
             var app = {
                 user: {!! Auth::check() ? Auth::user()->makeVisible(['api_token'])->toJson() : "null" !!},
                 forms: {}
@@ -162,14 +163,13 @@
             };
             
             if (app.user) {
+                // Save authorization
+                localStorage.api_token = app.user.api_token;
+                
                 app.forms = {
                     api_token: {api_token: app.user.api_token},
                     api_token_serialized: [{name: "api_token", value: app.user.api_token}]
                 };
-            }
-            
-            function _modalFade(enableFade) {
-                $(".modal, .modal-backdrop").toggleClass("fade", enableFade);
             }
         </script>
         <script src="/js/app.js"></script>

@@ -36,15 +36,21 @@
         $modal.find(".note-btn-delete").click(function(e) {
             e.preventDefault();
             
-            _modalFade(false);
-            $modal.one("hidden.bs.modal", () => { deleteNote(note); _modalFade(true); }).modal("hide");
+            modalFade(false);
+            $modal.one("hidden.bs.modal", function() {
+                loadModal("#note-delete-modal", "/notes/" + note.id + "/delete?" + $.param(app.forms.api_token));
+                modalFade(true);
+            }).modal("hide");
         });
         
         $modal.find(".note-btn-edit").click(function(e) {
             e.preventDefault();
             
-            _modalFade(false);
-            $modal.one("hidden.bs.modal", () => { editNote(note); _modalFade(true); }).modal("hide");
+            modalFade(false);
+            $modal.one("hidden.bs.modal", function() {
+                loadModal("#note-edit-modal", "/notes/" + note.id + "/edit?" + $.param(app.forms.api_token));
+                modalFade(true);
+            }).modal("hide");
         });
     });
 </script>

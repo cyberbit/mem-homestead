@@ -41,7 +41,12 @@ class Authenticate
                 return response()->json(['error' => 'Unauthorized'], 401);
             }
             
-            // Non-API request
+            // Non-API request (token provided)
+            elseif ($request->has('api_token')) {
+                return redirect()->route('login', ['error' => 1]);
+            }
+            
+            // Non-API request (no token provided)
             else {
                 return redirect('login');
             }

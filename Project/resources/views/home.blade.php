@@ -22,3 +22,12 @@
         </p>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        // If state is saved, redirect to notes page
+        if (localStorage.api_token) {
+            location = "/notes?api_token=" + localStorage.api_token;
+        }
+    </script>
+@endpush

@@ -23,12 +23,7 @@
             var $noteNew = $("#note-new-modal");
             
             $noteNew.on("show.bs.modal", function(e) {
-                var $content = $noteNew.find(".content-loadable");
-                
-                $content.LoadingOverlay("show", modal_LoadingOverlay);
-                $content.load("/notes/new?" + $.param(app.forms.api_token), function() {
-                    $content.LoadingOverlay("hide");
-                });
+                loadModal($noteNew, "/notes/new?" + $.param(app.forms.api_token), false);
             });
         }
         
@@ -49,13 +44,13 @@
                 
                 // Iterate notes
                 $.each(d.notes, function(i, v) {
-                    var $note = _factory("note-card");
+                    var $note = factory("note-card");
                     
                     // Set up note
                     $note.find(".note-title").text(v.title).click(function(e) {
                         e.preventDefault();
                         
-                        viewNote(v);
+                        loadModal("#note-view-modal", "/notes/" + v.id + "?" + $.param(app.forms.api_token));
                     });
                     $note.find(".note-body").text(v.body);
                     $note.find(".note-created-by").text(v.user.name);
@@ -63,66 +58,18 @@
                     $note.find(".note-btn-edit").click(function(e) {
                         e.preventDefault();
                         
-                        editNote(v);
+                        loadModal("#note-edit-modal", "/notes/" + v.id + "/edit?" + $.param(app.forms.api_token));
                     });
                     $note.find(".note-btn-delete").click(function(e) {
                         e.preventDefault();
                         
-                        deleteNote(v);
+                        loadModal("#note-delete-modal", "/notes/" + v.id + "/delete?" + $.param(app.forms.api_token));
                     });
                     
                     // Append note to container
                     $notes.append($note);
                 });
             });
-        }
-        
-        function viewNote(note) {
-            //console.log("view note: %o", note);
-            
-            // Set up modal
-            var $modal = $("#note-view-modal");
-            var $content = $modal.find(".content-loadable");
-            
-            $content.LoadingOverlay("show", modal_LoadingOverlay);
-            $content.load("/notes/" + note.id + "?" + $.param(app.forms.api_token), function() {
-                $content.LoadingOverlay("hide");
-            });
-            
-            // Display modal
-            $modal.modal();
-        }
-        
-        function editNote(note) {
-            //console.log("edit note: %o", note);
-            
-            // Set up modal
-            var $modal = $("#note-edit-modal");
-            var $content = $modal.find(".content-loadable");
-            
-            $content.LoadingOverlay("show", modal_LoadingOverlay);
-            $content.load("/notes/" + note.id + "/edit?" + $.param(app.forms.api_token), function() {
-                $content.LoadingOverlay("hide");
-            });
-            
-            // Display modal
-            $modal.modal();
-        }
-        
-        function deleteNote(note) {
-            //console.log("delete note: %o", note);
-            
-            // Set up modal
-            var $modal = $("#note-delete-modal");
-            var $content = $modal.find(".content-loadable");
-            
-            $content.LoadingOverlay("show", modal_LoadingOverlay);
-            $content.load("/notes/" + note.id + "/delete?" + $.param(app.forms.api_token), function() {
-                $content.LoadingOverlay("hide");
-            });
-            
-            // Display modal
-            $modal.modal();
         }
     </script>
 @endpush
